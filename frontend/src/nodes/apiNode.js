@@ -14,7 +14,8 @@ export const ApiNode = ({ id, data }) => {
   useEffect(() => {
     updateNodeField(id, 'url', url);
     updateNodeField(id, 'method', method);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode

@@ -1,34 +1,92 @@
 // textNode.js
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useUpdateNodeInternals } from 'reactflow'; // React Flow's custom hook for handle/size updates
 import { BaseNode } from './BaseNode';
-import { TextField } from './fields';
+import { TextAreaField } from './fields';
 import { useStore } from '../store';
 
 export const TextNode = ({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
   const updateNodeField = useStore((state) => state.updateNodeField);
+  const updateNodeInternals = useUpdateNodeInternals(); // Hook to notify React Flow of changes
+  const textareaRef = useRef(null);
+  const [textareaHeight, setTextareaHeight] = useState(48);
 
+  // Extract valid JS variables wrapped in double curly brackets: {{ variable_name }}
+  const extractVariables = (text) => {
+    const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
+    const vars = [];
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      const varName = match[1];
+      if (!vars.includes(varName)) {
+        vars.push(varName);
+      }
+    }
+    return vars;
+  };
+
+  const variables = extractVariables(currText);
+
+  // Sync state with central Zustand store
   useEffect(() => {
     updateNodeField(id, 'text', currText);
-  }, [id, updateNodeField]);
+  }, [id, currText, updateNodeField]);
+
+  // Notify React Flow to re-measure handles and card boundaries when text or variables update
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [id, currText, variables.length, updateNodeInternals]);
+
+  // Handle pixel-perfect height resizing on text change (supporting wrapping + newlines)
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollH = textareaRef.current.scrollHeight;
+      const nextHeight = Math.max(48, Math.min(250, scrollH));
+      setTextareaHeight(nextHeight);
+    }
+  }, [currText]);
+
+  // Dynamic width calculation based on the longest single line of text
+  const lines = currText.split('\n');
+  const longestLine = lines.reduce((max, line) => Math.max(max, line.length), 0);
+  const dynamicWidth = Math.max(190, Math.min(450, 140 + longestLine * 6.5));
+  
+  // Total node height matches textarea height + header + spacing + label padding (exactly 76px of overhead)
+  const dynamicHeight = 76 + textareaHeight;
+
+  // Dynamic handles array containing output on the right and variables on the left
+  const dynamicHandles = [
+    { type: 'source', position: 'right', id: 'output' },
+    ...variables.map((v) => ({
+      type: 'target',
+      position: 'left',
+      id: v,
+    })),
+  ];
 
   return (
     <BaseNode
       id={id}
       title="Text"
-      handles={[
-        { type: 'source', position: 'right', id: 'output' },
-      ]}
+      handles={dynamicHandles}
+      style={{ width: `${dynamicWidth}px`, height: `${dynamicHeight}px` }}
     >
-      <TextField
+      <TextAreaField
         label="Text"
         nodeId={id}
         fieldName="text"
         value={currText}
         onChange={setCurrText}
+        inputRef={textareaRef}
+        style={{ height: `${textareaHeight}px`, resize: 'none', overflowY: 'hidden' }}
       />
     </BaseNode>
   );
 };
+
+
+
 

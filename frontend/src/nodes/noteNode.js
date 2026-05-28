@@ -12,7 +12,8 @@ export const NoteNode = ({ id, data }) => {
 
   useEffect(() => {
     updateNodeField(id, 'text', text);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode

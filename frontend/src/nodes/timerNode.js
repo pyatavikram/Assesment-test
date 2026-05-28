@@ -14,7 +14,8 @@ export const TimerNode = ({ id, data }) => {
   useEffect(() => {
     updateNodeField(id, 'duration', duration);
     updateNodeField(id, 'unit', unit);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode

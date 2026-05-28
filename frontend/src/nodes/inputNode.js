@@ -13,7 +13,8 @@ export const InputNode = ({ id, data }) => {
   useEffect(() => {
     updateNodeField(id, 'inputName', currName);
     updateNodeField(id, 'inputType', inputType);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode

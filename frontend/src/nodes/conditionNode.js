@@ -12,7 +12,8 @@ export const ConditionNode = ({ id, data }) => {
 
   useEffect(() => {
     updateNodeField(id, 'condition', condition);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode

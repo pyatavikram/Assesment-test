@@ -56,7 +56,7 @@ export const SelectField = ({ label, nodeId, fieldName, value, onChange, options
   );
 };
 
-export const TextAreaField = ({ label, nodeId, fieldName, value, onChange, ...props }) => {
+export const TextAreaField = ({ label, nodeId, fieldName, value, onChange, inputRef, ...props }) => {
   const handleChange = (val) => {
     if (onChange) onChange(val);
     if (nodeId && fieldName) {
@@ -69,6 +69,7 @@ export const TextAreaField = ({ label, nodeId, fieldName, value, onChange, ...pr
       <label className="node-field__label">
         {label}
         <textarea
+          ref={inputRef}
           className="node-field__textarea"
           value={value}
           onChange={(e) => handleChange(e.target.value)}

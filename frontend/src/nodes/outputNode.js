@@ -13,7 +13,8 @@ export const OutputNode = ({ id, data }) => {
   useEffect(() => {
     updateNodeField(id, 'outputName', currName);
     updateNodeField(id, 'outputType', outputType);
-  }, [id, updateNodeField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <BaseNode
