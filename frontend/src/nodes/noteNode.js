@@ -1,12 +1,18 @@
 // noteNode.js
 // Annotation node with no handles — demonstrates a handle-free node for comments.
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextAreaField } from './fields';
+import { useStore } from '../store';
 
 export const NoteNode = ({ id, data }) => {
   const [text, setText] = useState(data?.text || 'Add your notes here...');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'text', text);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -14,7 +20,15 @@ export const NoteNode = ({ id, data }) => {
       title="Note"
       handles={[]}
     >
-      <TextAreaField label="" value={text} onChange={setText} rows={3} />
+      <TextAreaField
+        label=""
+        nodeId={id}
+        fieldName="text"
+        value={text}
+        onChange={setText}
+        rows={3}
+      />
     </BaseNode>
   );
 };
+

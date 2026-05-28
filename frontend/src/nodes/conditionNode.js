@@ -1,12 +1,18 @@
 // conditionNode.js
 // Conditional branching — demonstrates multiple source handles (true/false outputs).
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextField } from './fields';
+import { useStore } from '../store';
 
 export const ConditionNode = ({ id, data }) => {
   const [condition, setCondition] = useState(data?.condition || 'value > 0');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'condition', condition);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -18,10 +24,17 @@ export const ConditionNode = ({ id, data }) => {
         { type: 'source', position: 'right', id: 'false' },
       ]}
     >
-      <TextField label="If" value={condition} onChange={setCondition} />
+      <TextField
+        label="If"
+        nodeId={id}
+        fieldName="condition"
+        value={condition}
+        onChange={setCondition}
+      />
       <div className="base-node__hint">
         <span>↗ True &nbsp; ↘ False</span>
       </div>
     </BaseNode>
   );
 };
+

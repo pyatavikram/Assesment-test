@@ -1,13 +1,20 @@
 // timerNode.js
 // Delays pipeline execution — demonstrates number input + unit selection.
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextField, SelectField } from './fields';
+import { useStore } from '../store';
 
 export const TimerNode = ({ id, data }) => {
   const [duration, setDuration] = useState(data?.duration || '1000');
   const [unit, setUnit] = useState(data?.unit || 'ms');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'duration', duration);
+    updateNodeField(id, 'unit', unit);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -18,9 +25,18 @@ export const TimerNode = ({ id, data }) => {
         { type: 'source', position: 'right', id: 'done' },
       ]}
     >
-      <TextField label="Duration" type="number" value={duration} onChange={setDuration} />
+      <TextField
+        label="Duration"
+        type="number"
+        nodeId={id}
+        fieldName="duration"
+        value={duration}
+        onChange={setDuration}
+      />
       <SelectField
         label="Unit"
+        nodeId={id}
+        fieldName="unit"
         value={unit}
         onChange={setUnit}
         options={[
@@ -32,3 +48,4 @@ export const TimerNode = ({ id, data }) => {
     </BaseNode>
   );
 };
+

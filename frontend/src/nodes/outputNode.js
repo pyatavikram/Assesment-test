@@ -1,12 +1,19 @@
 // outputNode.js
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextField, SelectField } from './fields';
+import { useStore } from '../store';
 
 export const OutputNode = ({ id, data }) => {
   const [currName, setCurrName] = useState(data?.outputName || id.replace('customOutput-', 'output_'));
   const [outputType, setOutputType] = useState(data?.outputType || 'Text');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'outputName', currName);
+    updateNodeField(id, 'outputType', outputType);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -16,9 +23,17 @@ export const OutputNode = ({ id, data }) => {
         { type: 'target', position: 'left', id: 'value' },
       ]}
     >
-      <TextField label="Name" value={currName} onChange={setCurrName} />
+      <TextField
+        label="Name"
+        nodeId={id}
+        fieldName="outputName"
+        value={currName}
+        onChange={setCurrName}
+      />
       <SelectField
         label="Type"
+        nodeId={id}
+        fieldName="outputType"
         value={outputType}
         onChange={setOutputType}
         options={[
@@ -29,3 +44,4 @@ export const OutputNode = ({ id, data }) => {
     </BaseNode>
   );
 };
+

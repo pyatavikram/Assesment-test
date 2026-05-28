@@ -1,11 +1,17 @@
 // textNode.js
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextField } from './fields';
+import { useStore } from '../store';
 
 export const TextNode = ({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'text', currText);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -15,7 +21,14 @@ export const TextNode = ({ id, data }) => {
         { type: 'source', position: 'right', id: 'output' },
       ]}
     >
-      <TextField label="Text" value={currText} onChange={setCurrText} />
+      <TextField
+        label="Text"
+        nodeId={id}
+        fieldName="text"
+        value={currText}
+        onChange={setCurrText}
+      />
     </BaseNode>
   );
 };
+

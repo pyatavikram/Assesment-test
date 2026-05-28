@@ -1,12 +1,19 @@
 // inputNode.js
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BaseNode } from './BaseNode';
 import { TextField, SelectField } from './fields';
+import { useStore } from '../store';
 
 export const InputNode = ({ id, data }) => {
   const [currName, setCurrName] = useState(data?.inputName || id.replace('customInput-', 'input_'));
   const [inputType, setInputType] = useState(data?.inputType || 'Text');
+  const updateNodeField = useStore((state) => state.updateNodeField);
+
+  useEffect(() => {
+    updateNodeField(id, 'inputName', currName);
+    updateNodeField(id, 'inputType', inputType);
+  }, [id, updateNodeField]);
 
   return (
     <BaseNode
@@ -16,9 +23,17 @@ export const InputNode = ({ id, data }) => {
         { type: 'source', position: 'right', id: 'value' },
       ]}
     >
-      <TextField label="Name" value={currName} onChange={setCurrName} />
+      <TextField
+        label="Name"
+        nodeId={id}
+        fieldName="inputName"
+        value={currName}
+        onChange={setCurrName}
+      />
       <SelectField
         label="Type"
+        nodeId={id}
+        fieldName="inputType"
         value={inputType}
         onChange={setInputType}
         options={[
@@ -29,3 +44,4 @@ export const InputNode = ({ id, data }) => {
     </BaseNode>
   );
 };
+
