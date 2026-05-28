@@ -3,20 +3,37 @@
 import { DraggableNode } from './draggableNode';
 
 export const PipelineToolbar = () => {
-
     return (
-        <div style={{ padding: '10px' }}>
-            <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <DraggableNode type='customInput' label='Input' />
-                <DraggableNode type='llm' label='LLM' />
-                <DraggableNode type='customOutput' label='Output' />
-                <DraggableNode type='text' label='Text' />
-                <DraggableNode type='api' label='API' />
-                <DraggableNode type='condition' label='Condition' />
-                <DraggableNode type='timer' label='Timer' />
-                <DraggableNode type='merge' label='Merge' />
-                <DraggableNode type='note' label='Note' />
+        <aside className="toolbox-sidebar">
+            <h2 className="toolbox-title">Toolbox</h2>
+            
+            <div className="toolbox-category">
+                <div className="toolbox-category__title">Core Nodes</div>
+                <div className="toolbox-grid">
+                    <DraggableNode type='customInput' label='Input' />
+                    <DraggableNode type='customOutput' label='Output' />
+                    <DraggableNode type='llm' label='LLM' />
+                    <DraggableNode type='text' label='Text' />
+                </div>
             </div>
-        </div>
+
+            <div className="toolbox-category">
+                <div className="toolbox-category__title">Advanced</div>
+                <div className="toolbox-grid">
+                    <DraggableNode type='api' label='API' />
+                    <DraggableNode type='note' label='Note' />
+                </div>
+            </div>
+
+            <div className="toolbox-category">
+                <div className="toolbox-category__title">Logic & Control</div>
+                <div className="toolbox-grid">
+                    <DraggableNode type='condition' label='Condition' />
+                    <DraggableNode type='timer' label='Timer' />
+                    <DraggableNode type='merge' label='Merge' />
+                </div>
+            </div>
+        </aside>
     );
 };
+

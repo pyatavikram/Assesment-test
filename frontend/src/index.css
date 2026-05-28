@@ -1,13 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+:root {
+  /* Colors */
+  --bg-app: #080c14;
+  --bg-surface: #0f1524;
+  --bg-surface-hover: #182035;
+  --bg-field: #0a0e1a;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --border-color-hover: rgba(255, 255, 255, 0.12);
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  --color-text-dark: #6b7280;
+  
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-glow: rgba(59, 130, 246, 0.35);
+
+  /* Node Gradient Accents */
+  --gradient-customInput: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --gradient-customOutput: linear-gradient(135deg, #10b981, #14b8a6);
+  --gradient-llm: linear-gradient(135deg, #ec4899, #8b5cf6);
+  --gradient-text: linear-gradient(135deg, #f59e0b, #ea580c);
+  --gradient-api: linear-gradient(135deg, #6366f1, #3b82f6);
+  --gradient-condition: linear-gradient(135deg, #f43f5e, #db2777);
+  --gradient-timer: linear-gradient(135deg, #0d9488, #10b981);
+  --gradient-merge: linear-gradient(135deg, #7c3aed, #d946ef);
+  --gradient-note: linear-gradient(135deg, #eab308, #ca8a04);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-title: 'Plus Jakarta Sans', sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* App Layout Structure */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-app);
+}
+
+/* Header */
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 20px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 10;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+.brand-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.brand-title span {
+  color: var(--color-primary);
+}
+
+/* Workspace Panels */
+.workspace-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+  width: 100vw;
+}
+
+/* Sidebar Drawer */
+.toolbox-sidebar {
+  width: 240px;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  padding: 16px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.toolbox-title {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.toolbox-category {
+  margin-bottom: 24px;
+}
+
+.toolbox-category__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 0.03em;
+}
+
+.toolbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Draggable Nodes in Toolbar */
+.draggable-node-card {
+  cursor: grab;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: var(--bg-field);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  box-sizing: border-box;
+}
+
+.draggable-node-card:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-color-hover);
+  transform: translateY(-1px);
+}
+
+.draggable-node-card:active {
+  cursor: grabbing;
+}
+
+.draggable-node-card__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  user-select: none;
+}
+
+/* Canvas Panel */
+.canvas-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-color: var(--bg-app);
+}
+
+/* React Flow Custom Overrides */
+.react-flow__background {
+  background-color: var(--bg-app);
+}
+
+.react-flow__background-pattern {
+  stroke: rgba(255, 255, 255, 0.06) !important;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  border: 1px solid var(--border-color) !important;
+}
+
+.react-flow__controls-button {
+  background: var(--bg-surface) !important;
+  color: var(--color-text) !important;
+  fill: var(--color-text) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--bg-surface-hover) !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--bg-surface) !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.react-flow__edge-path {
+  stroke: var(--color-text-dark) !important;
+  stroke-width: 2px !important;
+  transition: stroke 0.15s ease, stroke-width 0.15s ease;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--color-primary) !important;
+  stroke-width: 3px !important;
+}
+
+/* Base Node Card CSS */
+.base-node {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  width: 190px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.react-flow__node.selected .base-node {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary-glow), 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.base-node__header {
+  height: 32px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+/* Type Accent Strips */
+.base-node__header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+/* Node Type Gradients mapped via parent classes */
+.react-flow__node-customInput .base-node__header::before { background: var(--gradient-customInput); }
+.react-flow__node-customOutput .base-node__header::before { background: var(--gradient-customOutput); }
+.react-flow__node-llm .base-node__header::before { background: var(--gradient-llm); }
+.react-flow__node-text .base-node__header::before { background: var(--gradient-text); }
+.react-flow__node-api .base-node__header::before { background: var(--gradient-api); }
+.react-flow__node-condition .base-node__header::before { background: var(--gradient-condition); }
+.react-flow__node-timer .base-node__header::before { background: var(--gradient-timer); }
+.react-flow__node-merge .base-node__header::before { background: var(--gradient-merge); }
+.react-flow__node-note .base-node__header::before { background: var(--gradient-note); }
+
+.base-node__title {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+}
+
+.base-node__content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.base-node__description {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.base-node__hint {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  text-align: right;
+}
+
+/* Forms & Fields in Nodes */
+.node-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.node-field__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.node-field__input,
+.node-field__select,
+.node-field__textarea {
+  background-color: var(--bg-field);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  padding: 6px 8px;
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.node-field__input:focus,
+.node-field__select:focus,
+.node-field__textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px var(--color-primary-glow);
+}
+
+.node-field__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 24px;
+}
+
+.node-field__textarea {
+  resize: vertical;
+  min-height: 48px;
+}
+
+/* React Flow Connection Handles */
+.react-flow__handle {
+  width: 8px !important;
+  height: 8px !important;
+  background-color: var(--bg-surface) !important;
+  border: 2px solid var(--color-text-dark) !important;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease !important;
+  z-index: 5;
+}
+
+/* Dynamically styled handles depending on role */
+.react-flow__handle-right, .react-flow__handle-bottom {
+  border-color: var(--color-primary) !important;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.25);
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 6px var(--color-primary-glow) !important;
+}
+
+/* Floating Submit Button */
+.submit-btn {
+  background: var(--color-primary);
+  border: none;
+  color: #ffffff;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px var(--color-primary-glow);
+}
+
+.submit-btn:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px var(--color-primary-glow);
+  transform: translateY(-0.5px);
+}
+
+.submit-btn:active {
+  transform: translateY(0.5px);
 }

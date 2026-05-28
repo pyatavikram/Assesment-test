@@ -11,9 +11,9 @@ const positionMap = {
   bottom: Position.Bottom,
 };
 
-export const BaseNode = ({ id, title, handles = [], children }) => {
+export const BaseNode = ({ id, title, handles = [], style = {}, className = '', children }) => {
   return (
-    <div className="base-node">
+    <div className={`base-node ${className}`} style={style}>
       <div className="base-node__header">
         <span className="base-node__title">{title}</span>
       </div>
