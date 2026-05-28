@@ -1,6 +1,7 @@
 // textNode.js
 
 import { useState, useEffect, useRef } from 'react';
+import { Handle, Position } from 'reactflow';
 import { useUpdateNodeInternals } from 'reactflow';
 import { BaseNode } from './BaseNode';
 import { TextAreaField } from './fields';
@@ -32,12 +33,11 @@ export const TextNode = ({ id, data }) => {
     updateNodeField(id, 'text', currText);
   }, [id, currText, updateNodeField]);
 
-  // Recalculate handles and node bounds in React Flow
   useEffect(() => {
     updateNodeInternals(id);
-  }, [id, currText, variables.length, updateNodeInternals]);
+  }, [id, variables.length, updateNodeInternals]);
 
-  // Auto-resize height based on textarea scroll height
+  // Auto-resize height
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -46,28 +46,19 @@ export const TextNode = ({ id, data }) => {
     }
   }, [currText]);
 
-  // Auto-resize width based on longest typed line
+  // Auto-resize width
   const lines = currText.split('\n');
   const longestLine = lines.reduce((max, line) => Math.max(max, line.length), 0);
   const dynamicWidth = Math.max(190, Math.min(450, 140 + longestLine * 6.5));
   const dynamicHeight = 76 + textareaHeight;
-
-  const dynamicHandles = [
-    { type: 'source', position: 'right', id: 'output' },
-    ...variables.map((v) => ({
-      type: 'target',
-      position: 'left',
-      id: v,
-    })),
-  ];
 
   return (
     <BaseNode
       id={id}
       title="Text"
       className="node--text"
-      handles={dynamicHandles}
-      style={{ width: `${dynamicWidth}px`, height: `${dynamicHeight}px` }}
+      handles={[]}
+      style={{ width: `${dynamicWidth}px`, minHeight: `${dynamicHeight}px` }}
     >
       <TextAreaField
         label="Text"
@@ -78,10 +69,29 @@ export const TextNode = ({ id, data }) => {
         inputRef={textareaRef}
         style={{ height: `${textareaHeight}px`, resize: 'none', overflowY: 'hidden' }}
       />
+
+      {/* Output handle — always present */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        id={`${id}-output`}
+        style={{ top: '50%' }}
+      />
+
+      {/* Dynamic variable handles — rendered directly so React Flow sees them */}
+      {variables.map((varName, i) => (
+        <Handle
+          key={varName}
+          type="target"
+          position={Position.Left}
+          id={`${id}-${varName}`}
+          style={{
+            top: variables.length === 1
+              ? '50%'
+              : `${((i + 1) / (variables.length + 1)) * 100}%`,
+          }}
+        />
+      ))}
     </BaseNode>
   );
 };
-
-
-
-
