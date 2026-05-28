@@ -8,7 +8,7 @@ export const SubmitButton = () => {
 
     const handleSubmit = async () => {
         if (nodes.length === 0) {
-            alert('Cannot submit an empty pipeline. Please drag and connect some nodes first!');
+            alert('Please drag and connect some nodes first.');
             return;
         }
 
@@ -34,27 +34,21 @@ export const SubmitButton = () => {
             });
 
             if (!response.ok) {
-                throw new Error(`Server returned error status ${response.status}`);
+                throw new Error(`Server error: ${response.status}`);
             }
 
             const result = await response.json();
 
-            // Display a professional, user-friendly summary of the parsed pipeline
             alert(
-                `🚀 Pipeline Successfully Submitted!\n\n` +
-                `📊 Graph Details:\n` +
-                `   • Total Nodes: ${result.num_nodes}\n` +
-                `   • Total Edges: ${result.num_edges}\n\n` +
-                `🔄 Topological Verification:\n` +
-                `   • Directed Acyclic Graph (DAG): ${result.is_dag ? '🟢 YES (Valid)' : '🔴 NO (Contains cycles!)'}\n\n` +
-                `${result.is_dag 
-                    ? '🎉 Your pipeline flow has no circular loops and is fully ready to execute!' 
-                    : '⚠️ Warning: A circular dependency exists. Please break loop cycles in your connections.'}`
+                `Pipeline Parse Results:\n` +
+                `Nodes: ${result.num_nodes}\n` +
+                `Edges: ${result.num_edges}\n` +
+                `Is DAG: ${result.is_dag ? 'Yes (Valid)' : 'No (Contains cycles)'}`
             );
 
         } catch (error) {
             console.error('Submission failed:', error);
-            alert(`❌ Pipeline submission failed:\n${error.message}\n\nPlease verify that your FastAPI backend is running locally at http://localhost:8000.`);
+            alert(`Pipeline submission failed: ${error.message}\n\nPlease check if backend is running on http://localhost:8000.`);
         }
     };
 

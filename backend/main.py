@@ -5,7 +5,6 @@ from typing import List
 
 app = FastAPI()
 
-# Enable CORS for React dev server on port 3000
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,7 +27,7 @@ class Pipeline(BaseModel):
     edges: List[Edge]
 
 def is_directed_acyclic_graph(nodes: List[str], edges: List[Edge]) -> bool:
-    # 1. Build adjacency list representation of the graph
+    # Build adjacency list
     adj = {node: [] for node in nodes}
     for edge in edges:
         if edge.source not in adj:
@@ -37,28 +36,26 @@ def is_directed_acyclic_graph(nodes: List[str], edges: List[Edge]) -> bool:
             adj[edge.target] = []
         adj[edge.source].append(edge.target)
 
-    # 2. Visited states map:
-    # 0 = Unvisited, 1 = Visiting (in recursion stack), 2 = Visited (completed)
+    # 0 = unvisited, 1 = visiting (on stack), 2 = visited
     visited = {node: 0 for node in adj.keys()}
 
     def has_cycle(u: str) -> bool:
-        visited[u] = 1  # Mark as visiting
+        visited[u] = 1
         for v in adj.get(u, []):
             if visited.get(v, 0) == 1:
-                return True  # Back-edge found: cycle exists!
+                return True
             if visited.get(v, 0) == 0:
                 if has_cycle(v):
                     return True
-        visited[u] = 2  # Mark as fully processed
+        visited[u] = 2
         return False
 
-    # 3. Perform DFS for all unvisited nodes
     for node in list(adj.keys()):
         if visited.get(node, 0) == 0:
             if has_cycle(node):
-                return False  # Contains a cycle, not a DAG
+                return False
 
-    return True  # No cycles, it is a valid DAG
+    return True
 
 @app.get('/')
 def read_root():
@@ -77,4 +74,5 @@ def parse_pipeline(pipeline: Pipeline):
         'num_edges': num_edges,
         'is_dag': is_dag
     }
+
 
