@@ -272,8 +272,32 @@ code {
   padding: 0 12px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
   position: relative;
+}
+
+.base-node__delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-size: 10px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  padding: 0;
+  margin-left: auto;
+  z-index: 10;
+}
+
+.base-node__delete-btn:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
 }
 
 /* Type Accent Strips */
@@ -287,15 +311,32 @@ code {
 }
 
 /* Node Type Gradients mapped via parent classes */
-.react-flow__node-customInput .base-node__header::before { background: var(--gradient-customInput); }
-.react-flow__node-customOutput .base-node__header::before { background: var(--gradient-customOutput); }
-.react-flow__node-llm .base-node__header::before { background: var(--gradient-llm); }
-.react-flow__node-text .base-node__header::before { background: var(--gradient-text); }
-.react-flow__node-api .base-node__header::before { background: var(--gradient-api); }
-.react-flow__node-condition .base-node__header::before { background: var(--gradient-condition); }
-.react-flow__node-timer .base-node__header::before { background: var(--gradient-timer); }
-.react-flow__node-merge .base-node__header::before { background: var(--gradient-merge); }
-.react-flow__node-note .base-node__header::before { background: var(--gradient-note); }
+.react-flow__node-customInput .base-node__header::before,
+.node--customInput .base-node__header::before { background: var(--gradient-customInput); }
+
+.react-flow__node-customOutput .base-node__header::before,
+.node--customOutput .base-node__header::before { background: var(--gradient-customOutput); }
+
+.react-flow__node-llm .base-node__header::before,
+.node--llm .base-node__header::before { background: var(--gradient-llm); }
+
+.react-flow__node-text .base-node__header::before,
+.node--text .base-node__header::before { background: var(--gradient-text); }
+
+.react-flow__node-api .base-node__header::before,
+.node--api .base-node__header::before { background: var(--gradient-api); }
+
+.react-flow__node-condition .base-node__header::before,
+.node--condition .base-node__header::before { background: var(--gradient-condition); }
+
+.react-flow__node-timer .base-node__header::before,
+.node--timer .base-node__header::before { background: var(--gradient-timer); }
+
+.react-flow__node-merge .base-node__header::before,
+.node--merge .base-node__header::before { background: var(--gradient-merge); }
+
+.react-flow__node-note .base-node__header::before,
+.node--note .base-node__header::before { background: var(--gradient-note); }
 
 .base-node__title {
   font-family: var(--font-title);

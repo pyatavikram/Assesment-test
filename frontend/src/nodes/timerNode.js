@@ -21,6 +21,7 @@ export const TimerNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Timer"
+      className="node--timer"
       handles={[
         { type: 'target', position: 'left', id: 'trigger' },
         { type: 'source', position: 'right', id: 'done' },

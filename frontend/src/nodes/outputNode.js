@@ -20,6 +20,7 @@ export const OutputNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Output"
+      className="node--customOutput"
       handles={[
         { type: 'target', position: 'left', id: 'value' },
       ]}

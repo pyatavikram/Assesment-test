@@ -5,7 +5,6 @@
 import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
-import { shallow } from 'zustand/shallow';
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
@@ -32,28 +31,18 @@ const nodeTypes = {
   note: NoteNode,
 };
 
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  getNodeID: state.getNodeID,
-  addNode: state.addNode,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
-
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect
-    } = useStore(selector, shallow);
+    
+    const nodes = useStore((state) => state.nodes);
+    const edges = useStore((state) => state.edges);
+    const getNodeID = useStore((state) => state.getNodeID);
+    const addNode = useStore((state) => state.addNode);
+    const onNodesChange = useStore((state) => state.onNodesChange);
+    const onEdgesChange = useStore((state) => state.onEdgesChange);
+    const onConnect = useStore((state) => state.onConnect);
+    const deleteEdge = useStore((state) => state.deleteEdge);
 
     const getInitNodeData = (nodeID, type) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
@@ -98,6 +87,10 @@ export const PipelineUI = () => {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
+    const onEdgeDoubleClick = useCallback((event, edge) => {
+        deleteEdge(edge.id);
+    }, [deleteEdge]);
+
     return (
         <>
         <div ref={reactFlowWrapper} style={{width: '100%', height: '100%'}}>
@@ -109,6 +102,7 @@ export const PipelineUI = () => {
                 onConnect={onConnect}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
+                onEdgeDoubleClick={onEdgeDoubleClick}
                 onInit={setReactFlowInstance}
                 nodeTypes={nodeTypes}
                 proOptions={proOptions}

@@ -20,6 +20,7 @@ export const InputNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Input"
+      className="node--customInput"
       handles={[
         { type: 'source', position: 'right', id: 'value' },
       ]}

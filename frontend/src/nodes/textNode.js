@@ -65,6 +65,7 @@ export const TextNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Text"
+      className="node--text"
       handles={dynamicHandles}
       style={{ width: `${dynamicWidth}px`, height: `${dynamicHeight}px` }}
     >

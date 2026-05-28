@@ -19,6 +19,7 @@ export const ConditionNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Condition"
+      className="node--condition"
       handles={[
         { type: 'target', position: 'left', id: 'input' },
         { type: 'source', position: 'right', id: 'true' },

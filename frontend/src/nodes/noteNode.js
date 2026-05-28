@@ -19,6 +19,7 @@ export const NoteNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Note"
+      className="node--note"
       handles={[]}
     >
       <TextAreaField

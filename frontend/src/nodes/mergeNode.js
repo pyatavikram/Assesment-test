@@ -8,6 +8,7 @@ export const MergeNode = ({ id, data }) => {
     <BaseNode
       id={id}
       title="Merge"
+      className="node--merge"
       handles={[
         { type: 'target', position: 'left', id: 'input-1' },
         { type: 'target', position: 'left', id: 'input-2' },

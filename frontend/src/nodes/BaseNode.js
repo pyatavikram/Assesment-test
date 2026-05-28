@@ -3,6 +3,7 @@
 // Nodes declare their title, handles, and content — BaseNode renders everything.
 
 import { Handle, Position } from 'reactflow';
+import { useStore } from '../store';
 
 const positionMap = {
   left: Position.Left,
@@ -12,10 +13,23 @@ const positionMap = {
 };
 
 export const BaseNode = ({ id, title, handles = [], style = {}, className = '', children }) => {
+  const deleteNode = useStore((state) => state.deleteNode);
+
   return (
     <div className={`base-node ${className}`} style={style}>
       <div className="base-node__header">
         <span className="base-node__title">{title}</span>
+        <button
+          className="base-node__delete-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteNode(id);
+          }}
+          title="Delete Node"
+          aria-label="Delete Node"
+        >
+          ✕
+        </button>
       </div>
       <div className="base-node__content">
         {children}
